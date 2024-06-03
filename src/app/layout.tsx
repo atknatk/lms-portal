@@ -6,6 +6,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { auth } from '@/auth';
 import { Toaster } from '@/components/ui/toaster';
+import { AppStateProvider } from '@/lib/app-state';
 
 
 
@@ -25,11 +26,15 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} overflow-hidden`}>
+      <AppStateProvider>
+
         <NextTopLoader />
         <Providers session={session}>
           <Toaster />
           {children}
         </Providers>
+        </AppStateProvider>
+
       </body>
     </html>
   );

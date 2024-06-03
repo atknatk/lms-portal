@@ -14,4 +14,4 @@ export default auth((req : any) => {
   }
 });
 
-export const config = { matcher: ['/dashboard/:path*'] };
+export const config = { matcher: ['/dashboard/:path*','/search/:path*'] };

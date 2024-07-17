@@ -44,8 +44,7 @@ const useSocket = (
           !embeddingModel ||
           !embeddingModelProvider
         ) {
-          const providers = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/models`,
+          const providers = await fetch(`/api/models`,
             {
               headers: {
                 'Content-Type': 'application/json',
@@ -84,14 +83,7 @@ const useSocket = (
             embeddingModelProvider,
           );
         } else {
-          const providers = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/models`,
-            {
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            },
-          ).then(async (res) => await res.json());
+          const providers = await fetch(`/api/models`).then(async (res) => await res.json());
 
           const chatModelProviders = providers.chatModelProviders;
           const embeddingModelProviders = providers.embeddingModelProviders;
@@ -212,15 +204,7 @@ const loadMessages = async (
   setFocusMode: (mode: string) => void,
   setNotFound: (notFound: boolean) => void,
 ) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/chats/${chatId}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    },
-  );
+  const res = await fetch(`/api/chats/${chatId}`);
 
   if (res.status === 404) {
     setNotFound(true);

@@ -88,11 +88,7 @@ const SettingsDialog = ({
     if (isOpen) {
       const fetchConfig = async () => {
         setIsLoading(true);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/config`, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const res = await fetch(`/api/config`);
 
         const data = (await res.json()) as SettingsType;
         setConfig(data);
@@ -148,11 +144,8 @@ const SettingsDialog = ({
     setIsUpdating(true);
 
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/config`, {
+      await fetch(`/api/config`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(config),
       });
 

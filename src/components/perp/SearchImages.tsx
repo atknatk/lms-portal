@@ -33,13 +33,9 @@ const SearchImages = ({
             const chatModelProvider = localStorage.getItem('chatModelProvider');
             const chatModel = localStorage.getItem('chatModel');
 
-            const res = await fetch(
-              `${process.env.NEXT_PUBLIC_API_URL}/images`,
+            const res = await fetch(`/api/images`,
               {
                 method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
                 body: JSON.stringify({
                   query: query,
                   chat_history: chat_history,
@@ -48,7 +44,9 @@ const SearchImages = ({
                 }),
               },
             );
-
+            if (!res.ok) {
+              throw new Error('Failed to generate image');
+            }
             const data = await res.json();
 
             const images = data.images;

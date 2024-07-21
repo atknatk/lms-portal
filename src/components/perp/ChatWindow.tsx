@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
 import { getSuggestions } from '@/lib/perp/actions';
 import Error from 'next/error';
+import { ScrollArea } from '../ui/scroll-area';
 
 export type Message = {
   messageId: string;
@@ -467,7 +468,8 @@ const ChatWindow = ({ id }: { id?: string }) => {
       <div>
         {messages.length > 0 ? (
           <>
-            <Navbar messages={messages} />
+            {/* <Navbar messages={messages} /> */}
+            <ScrollArea className="h-[calc(100vh-12rem)]">
             <Chat
               loading={loading}
               messages={messages}
@@ -475,6 +477,8 @@ const ChatWindow = ({ id }: { id?: string }) => {
               messageAppeared={messageAppeared}
               rewrite={rewrite}
             />
+            </ScrollArea>
+            
           </>
         ) : (
           <EmptyChat

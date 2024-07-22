@@ -28,9 +28,11 @@ const useSocket = (
   setError: (error: boolean) => void,
 ) => {
   const [ws, setWs] = useState<WebSocket | null>(null);
+  const [reconnectInterval, setReconnectInterval] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (!ws) {
+
       const connectWs = async () => {
         let chatModel = localStorage.getItem('chatModel');
         let chatModelProvider = localStorage.getItem('chatModelProvider');
@@ -154,7 +156,7 @@ const useSocket = (
         const timeoutId = setTimeout(() => {
           if (ws.readyState !== 1) {
             ws.close();
-            setError(true);
+        //    setError(true);
             toast.error(
               'Failed to connect to the server. Please try again later.',
             );
@@ -170,16 +172,20 @@ const useSocket = (
 
         ws.onerror = () => {
           clearTimeout(timeoutId);
-          setError(true);
+       //   setError(true);
           toast.error('WebSocket connection error.');
         };
 
         ws.onclose = () => {
           clearTimeout(timeoutId);
-          setError(true);
+      //    setError(true);
           console.log('[DEBUG] closed');
+          if (!reconnectInterval) {
+            setReconnectInterval(setInterval(() => {
+              connectWs();
+            }, 3000)); // Retry every 5 seconds
+          }
         };
-
         setWs(ws);
       };
 
@@ -191,8 +197,12 @@ const useSocket = (
         ws?.close();
         console.log('[DEBUG] closed');
       }
+      if (reconnectInterval) {
+        clearInterval(reconnectInterval);
+        setReconnectInterval(null);
+      }
     };
-  }, [ws, url, setIsWSReady, setError]);
+  }, [ws, url, setIsWSReady, setError, reconnectInterval]);
 
   return ws;
 };

@@ -1,3 +1,4 @@
+
 import { NextAuthConfig, Session } from 'next-auth';
 import CredentialProvider from 'next-auth/providers/credentials';
 import FacebookProvider from "next-auth/providers/facebook"
@@ -134,7 +135,7 @@ const authConfig: NextAuthConfig = {
             token.picture = data.user.picture
             token.provider = account.provider
             token.blocked = data.user.blocked
-           // token.role = data.user.role
+            token.role = data.user.role
           } catch (error) {
             console.error('Facebook auth error:', error)
             throw error
@@ -145,7 +146,7 @@ const authConfig: NextAuthConfig = {
           token.provider = account.provider
           token.blocked = (user as CustomUser).blocked
           token.picture = (user as CustomUser).picture
-          //token.role = (user as CustomUser).role
+          token.role = (user as CustomUser).role
         }
       }
       return token
@@ -156,7 +157,7 @@ const authConfig: NextAuthConfig = {
       session.user.strapiUserId = token.strapiUserId
       session.user.picture = token.picture
       session.user.blocked = token.blocked
-      //session.user.role = token.role
+      session.user.role = token.role
       return session
     },
   },
@@ -178,56 +179,3 @@ const authConfig: NextAuthConfig = {
 export const { handlers, auth, signIn, signOut } = NextAuth(authConfig);
 
 export default authConfig;
-
-
-
-
-
-
-
-
-
-// import { NextAuthConfig } from 'next-auth';
-// import CredentialProvider from 'next-auth/providers/credentials';
-// import GithubProvider from 'next-auth/providers/github';
-
-// const authConfig = {
-//   trustHost: true,
-//   providers: [
-//     // GithubProvider({
-//     //   clientId: process.env.GITHUB_ID ?? '',
-//     //   clientSecret: process.env.GITHUB_SECRET ?? ''
-//     // }),
-//     CredentialProvider({
-//       credentials: {
-//         email: {
-//           type: 'email'
-//         },
-//         password: {
-//           type: 'password'
-//         }
-//       },
-//       async authorize(credentials, req) {
-//         const user = {
-//           id: '1',
-//           name: 'Kyle',
-//           email: credentials?.email as string
-//         };
-//         if (user) {
-//           // Any object returned will be saved in `user` property of the JWT
-//           return user;
-//         } else {
-//           // If you return null then an error will be displayed advising the user to check their details.
-//           return null;
-
-//           // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
-//         }
-//       }
-//     })
-//   ],
-//   pages: {
-//     signIn: '/' //sigin page
-//   }
-// } satisfies NextAuthConfig;
-
-// export default authConfig;

@@ -134,7 +134,7 @@ const authConfig: NextAuthConfig = {
             token.picture = data.user.picture
             token.provider = account.provider
             token.blocked = data.user.blocked
-            token.role = data.user.role
+           // token.role = data.user.role
           } catch (error) {
             console.error('Facebook auth error:', error)
             throw error
@@ -145,7 +145,7 @@ const authConfig: NextAuthConfig = {
           token.provider = account.provider
           token.blocked = (user as CustomUser).blocked
           token.picture = (user as CustomUser).picture
-          token.role = (user as CustomUser).role
+          //token.role = (user as CustomUser).role
         }
       }
       return token
@@ -156,7 +156,7 @@ const authConfig: NextAuthConfig = {
       session.user.strapiUserId = token.strapiUserId
       session.user.picture = token.picture
       session.user.blocked = token.blocked
-      session.user.role = token.role
+      //session.user.role = token.role
       return session
     },
   },

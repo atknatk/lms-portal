@@ -22,7 +22,7 @@ const Page = () => {
     const fetchChats = async () => {
       setLoading(true);
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chats?connectionId=${session?.user?.id || '-1'}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chats?connectionId=${session?.user?.email || '-1'}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

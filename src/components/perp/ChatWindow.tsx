@@ -11,6 +11,7 @@ import { useSearchParams } from 'next/navigation';
 import { getSuggestions } from '@/lib/perp/actions';
 import Error from 'next/error';
 import { ScrollArea } from '../ui/scroll-area';
+import { useSession } from 'next-auth/react';
 
 export type Message = {
   messageId: string;
@@ -29,11 +30,12 @@ const useSocket = (
 ) => {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [reconnectInterval, setReconnectInterval] = useState<NodeJS.Timeout | null>(null);
-
+  const { data: session } = useSession();
   useEffect(() => {
     if (!ws) {
 
       const connectWs = async () => {
+        let connectionId = session?.user?.id || '-1';
         let chatModel = localStorage.getItem('chatModel');
         let chatModelProvider = localStorage.getItem('chatModelProvider');
         let embeddingModel = localStorage.getItem('embeddingModel');
@@ -145,7 +147,7 @@ const useSocket = (
             localStorage.getItem('openAIBaseURL')!,
           );
         }
-
+        searchParams.append('connectionId', connectionId!);
         searchParams.append('embeddingModel', embeddingModel!);
         searchParams.append('embeddingModelProvider', embeddingModelProvider);
 

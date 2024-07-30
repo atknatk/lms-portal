@@ -3,6 +3,7 @@
 import DeleteChat from '@/components/perp/DeleteChat';
 import { formatTimeDifference } from '@/lib/perp/utils';
 import { BookOpenText, ClockIcon, Delete, ScanEye } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -16,12 +17,12 @@ export interface Chat {
 const Page = () => {
   const [chats, setChats] = useState<Chat[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const { data: session } = useSession();
   useEffect(() => {
     const fetchChats = async () => {
       setLoading(true);
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chats`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chats?connectionId=${session?.user?.id || '-1'}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +82,7 @@ const Page = () => {
               key={i}
             >
               <Link
-                href={`dashboard/perp/c/${chat.id}`}
+                href={`c/${chat.id}`}
                 className="text-black dark:text-white lg:text-xl font-medium truncate transition duration-200 hover:text-[#24A0ED] dark:hover:text-[#24A0ED] cursor-pointer"
               >
                 {chat.title}

@@ -118,6 +118,12 @@ export const navItems: NavItem[] = [
     icon: 'dashboard',
     label: 'Perp'
   },
+  {
+    title: 'Library',
+    href: '/dashboard/perp/library',
+    icon: 'dashboard',
+    label: 'Library'
+  },
   
   // {
   //   title: 'Dashboard',

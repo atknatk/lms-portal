@@ -33,12 +33,12 @@ const useSocket = (
   const { data: session } = useSession();
   useEffect(() => {
     if (!ws) {
-
+      console.log('session', session);
       const connectWs = async () => {
         let connectionId = session?.user?.id || '-1';
-        let chatModel = localStorage.getItem('chatModel');
+        let chatModel = 'GPT-4 omni mini' ; // localStorage.getItem('chatModel');
         let chatModelProvider = localStorage.getItem('chatModelProvider');
-        let embeddingModel = localStorage.getItem('embeddingModel');
+        let embeddingModel = 'Text embedding 3 large';//= localStorage.getItem('embeddingModel');
         let embeddingModelProvider = localStorage.getItem(
           'embeddingModelProvider',
         );

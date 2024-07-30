@@ -4,6 +4,7 @@
 
 import NextAuth from 'next-auth';
 import authConfig from './src/auth.config';
+import { NextResponse } from 'next/server';
 
 const { auth } = NextAuth(authConfig);
 
@@ -11,24 +12,26 @@ export default auth((req : any) => {
   const { nextUrl } = req;
   const isAuthenticated = !!req.auth;
 
-  if(!isAuthenticated){
-    return Response.redirect('/');
-  }
-
-
-  if((nextUrl.pathname == '' || nextUrl.pathname == '/')){
-    if(isAuthenticated){
-      return Response.redirect('/dashboard/perp');
-    }else{
-      return Response.redirect('https://abcenglishonline.com');
+  // Handle root path redirects
+  if (nextUrl.pathname === '/') {
+    if (isAuthenticated) {
+      return NextResponse.redirect(new URL('/dashboard/perp', nextUrl.origin));
+    } else {
+      return NextResponse.redirect('https://abcenglishonline.com/signin');
     }
   }
 
-
-  if (!req.auth) {
-    const url = req.url.replace(req.nextUrl.pathname, '/');
-    return Response.redirect(url);
+ // Protect specific routes
+ if (nextUrl.pathname.startsWith('/dashboard') || nextUrl.pathname.startsWith('/search')) {
+  if (!isAuthenticated) {
+    return NextResponse.redirect('https://abcenglishonline.com/signin');
   }
+}
+
+
+
+  // Allow access if authenticated or if path is not protected
+  return NextResponse.next();
 });
 
-export const config = { matcher: ['/dashboard/:path*','/search/:path*'] };
+export const config = { matcher: ['/dashboard/:path*','/search/:path*', '/'] };

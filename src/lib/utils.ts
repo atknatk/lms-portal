@@ -68,6 +68,27 @@ export function transformToolMessages(messages: CoreMessage[]): CoreMessage[] {
 }
 
 
+export function getStrapiHeader() {
+  return {
+    'Authorization': `Bearer ${process.env.BACKEND_TOKEN}`,
+    "Content-Type": "application/json",
+  }
+}
+
+
 export function getStrapiURL(path? : string) {
   return `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'}${path ?? ''}`;
+}
+
+export async function getStrapiFetch(url : string) {
+  const headers = {
+    ...getStrapiHeader()
+  };
+  console.log(headers);
+  const result = await fetch(getStrapiURL(`/api/${url}`), {
+    headers,
+    next: { revalidate : 60}
+  });
+  const data = await result.json();
+  return data;
 }

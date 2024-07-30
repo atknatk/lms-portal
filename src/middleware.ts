@@ -3,7 +3,7 @@
 // https://nextjs.org/docs/app/building-your-application/routing/middleware
 
 import NextAuth from 'next-auth';
-import authConfig from './src/auth.config';
+import authConfig from './auth.config';
 import { NextResponse } from 'next/server';
 
 const { auth } = NextAuth(authConfig);

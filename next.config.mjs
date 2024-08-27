@@ -39,14 +39,14 @@ const nextConfig = {
           }
         ],
       },
-    // async rewrites() {
-    //     return [
-    //       {
-    //         source: 'perp-api/:path*',
-    //         destination: `http://31.220.77.86:3201/:path*`,
-    //       },
-    //     ]
-    //   },
+    async rewrites() {
+        return [
+          {
+            source: '/api/:path*',
+            destination: process.env.ENV == 'development' ? `https://dash.abcenglishonline.com/api/:path*` : '/api/:path*',
+          },
+        ]
+      },
 };
 
 export default nextConfig;

@@ -113,14 +113,20 @@ export type Employee = {
 
 export const navItems: NavItem[] = [
   {
-    title: 'Perp',
-    href: '/dashboard/perp',
+    title: 'R.O.S.A.',
+    href: '/dashboard/rosa',
     icon: 'dashboard',
-    label: 'Perp'
+    label: 'Rosa Ai'
   },
   {
-    title: 'Library',
-    href: '/dashboard/perp/library',
+    title: 'Ai',
+    href: '/dashboard/ai',
+    icon: 'dashboard',
+    label: 'Library'
+  },
+  {
+    title: 'R.O.S.A. History',
+    href: '/dashboard/rosa/library',
     icon: 'dashboard',
     label: 'Library'
   },

@@ -12,23 +12,27 @@ export default auth((req : any) => {
   const { nextUrl } = req;
   const isAuthenticated = !!req.auth;
 
-  // Handle root path redirects
-  if (nextUrl.pathname === '/') {
-    if (isAuthenticated) {
-      return NextResponse.redirect(new URL('/dashboard/perp', nextUrl.origin));
-    } else {
+  
+  if (process.env.ENV != 'development') {
+    if (nextUrl.pathname === '/' && process.env.ENV != 'development') {
+      if (isAuthenticated) {
+        return NextResponse.redirect(new URL('/dashboard/rosa', nextUrl.origin));
+      } else {
+        return NextResponse.redirect('https://abcenglishonline.com/signin');
+      }
+    }
+  
+   // Protect specific routes
+   if (process.env.ENV != 'development' && (nextUrl.pathname.startsWith('/dashboard') || nextUrl.pathname.startsWith('/search'))) {
+    if (!isAuthenticated) {
       return NextResponse.redirect('https://abcenglishonline.com/signin');
     }
   }
-
- // Protect specific routes
- if (nextUrl.pathname.startsWith('/dashboard') || nextUrl.pathname.startsWith('/search')) {
-  if (!isAuthenticated) {
-    return NextResponse.redirect('https://abcenglishonline.com/signin');
   }
-}
+  
 
-
+  // Handle root path redirects
+  
 
   // Allow access if authenticated or if path is not protected
   return NextResponse.next();

@@ -8,13 +8,14 @@ import EmptyChat from './EmptyChat';
 import crypto from 'crypto';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
-import { getSuggestions } from '@/lib/perp/actions';
+import { getSuggestions } from '@/lib/rosa/actions';
 import Error from 'next/error';
 import { ScrollArea } from '../ui/scroll-area';
 import { useSession } from 'next-auth/react';
 
 export type Message = {
   messageId: string;
+  id?: string;
   chatId: string;
   createdAt: Date;
   content: string;
@@ -36,7 +37,7 @@ const useSocket = (
       console.log('session', session);
       const connectWs = async () => {
         let connectionId = session?.user?.email || '-1';
-        let chatModel = 'GPT-4 omni mini' ; // localStorage.getItem('chatModel');
+        let chatModel = 'GPT-4o' ; // localStorage.getItem('chatModel');
         let chatModelProvider = localStorage.getItem('chatModelProvider');
         let embeddingModel = 'Text embedding 3 large';//= localStorage.getItem('embeddingModel');
         let embeddingModelProvider = localStorage.getItem(
@@ -440,7 +441,7 @@ const ChatWindow = ({ id }: { id?: string }) => {
   };
 
   const rewrite = (messageId: string) => {
-    const index = messages.findIndex((msg) => msg.messageId === messageId);
+    const index = messages.findIndex((msg) => (msg?.messageId != undefined  ? msg?.messageId : msg?.id) === messageId);
 
     if (index === -1) return;
 

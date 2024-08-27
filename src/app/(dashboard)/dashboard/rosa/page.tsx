@@ -1,11 +1,11 @@
-import ChatWindow from '@/components/perp/ChatWindow';
+import ChatWindow from '@/components/rosa/ChatWindow';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 export const metadata: Metadata = {
-  title: 'Chat - Perplexica',
-  description: 'Chat with the internet, chat with Perplexica.',
+  title: 'Chat - Rosa AI',
+  description: 'Chat with the internet, chat with Rosa AI.',
 };
 
 const Home = () => {

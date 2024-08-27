@@ -1,7 +1,7 @@
 'use client';
 
-import DeleteChat from '@/components/perp/DeleteChat';
-import { formatTimeDifference } from '@/lib/perp/utils';
+import DeleteChat from '@/components/rosa/DeleteChat';
+import { formatTimeDifference } from '@/lib/rosa/utils';
 import { BookOpenText, ClockIcon, Delete, ScanEye } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';

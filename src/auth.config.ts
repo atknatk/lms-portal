@@ -6,7 +6,7 @@ import GoogleProvider from "next-auth/providers/google"
 import LinkedInProvider from "next-auth/providers/linkedin"
 import { getStrapiFetch, getStrapiURL } from './lib/utils';
 import { JWT } from "next-auth/jwt"
-import NextAuth, { DefaultSession, User as NextAuthUser } from 'next-auth';
+import { DefaultSession, User as NextAuthUser } from 'next-auth';
 import { CustomUser } from 'next-auth';
 
 declare module 'next-auth' {
@@ -115,9 +115,26 @@ const handleProviderSignIn = async (account: any, profile:any, token:any) => {
 
 
 const authorizeCredentials = async (credentials: any) => {
+  if(process.env.ENV == 'development'){
+    return {
+      name: 'Atakan Atik',
+      email: 'atknatk@gmail.com',
+      id: 99999,
+      strapiUserId: 99999,
+      blocked: false,
+      strapiToken: 'userData.jwt',
+      role: {
+        id: 1,
+        name: 'student',
+      },
+    }
+  }
+
   if (!credentials || !credentials.identifier || !credentials.password) {
     return null;
   }
+
+  
   try {
     const response = await fetch(`${getStrapiURL()}/api/auth/local`, {
       method: 'POST',
@@ -241,7 +258,7 @@ const authConfig: NextAuthConfig = {
         sameSite: 'lax',
         path: '/',
         secure: true,
-        domain: '.abcenglishonline.com', // Ana domain
+        domain: process.env.ENV == 'development' ? '.localhost:3000' : '.abcenglishonline.com', // Ana domain
       },
     },
   },
@@ -261,147 +278,3 @@ export default authConfig;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////
-
-
-
-// const authConfig: NextAuthConfig = {
-//   trustHost: true,
-//   providers: [
-//     FacebookProvider({
-//       clientId: process.env.AUTH_FACEBOOK_ID!,
-//       clientSecret: process.env.AUTH_FACEBOOK_SECRET!
-//     }),
-//     GoogleProvider({
-//       clientId: process.env.GOOGLE_CLIENT_ID!,
-//       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-//     }),
-//     LinkedInProvider({
-//       clientId: process.env.LINKEDIN_CLIENT_ID!,
-//       clientSecret: process.env.LINKEDIN_CLIENT_SECRET!
-//     }),
-//     CredentialProvider({
-//       name: 'email and password',
-//       credentials: {
-//         identifier: {
-//           label: 'Email Or Username *',
-//           type: 'text',
-//         },
-//         password: { label: 'Password *', type: 'password' },
-//       },
-//       async authorize(credentials): Promise<CustomUser | null> {
-//         if (!credentials || !credentials.identifier || !credentials.password) {
-//           return null
-//         }
-//         try {
-//           const response = await fetch(`${getStrapiURL()}/api/auth/local`, {
-//             method: 'POST',
-//             headers: { 'Content-Type': 'application/json' },
-//             body: JSON.stringify({
-//               identifier: credentials.identifier,
-//               password: credentials.password,
-//             }),
-//           })
-
-//           if (!response.ok) {
-//             const data = await response.json()
-//             throw new Error(data.error.message || response.statusText)
-//           }
-
-//           const data = await response.json()
-//           return {
-//             id: data.user.id.toString(),
-//             name: data.user.username,
-//             email: data.user.email,
-//             strapiUserId: data.user.id,
-//             blocked: data.user.blocked,
-//             strapiToken: data.jwt,
-//             role: data.user.role,
-//             picture: data.user.picture
-//           }
-//         } catch (error) {
-//           console.error('Authorization error:', error)
-//           return null
-//         }
-//       }
-//     })
-//   ],
-//   pages: {
-//     signIn: '/' //signin page
-//   },
-//   callbacks: {
-//     async jwt({ token, account, user, profile, trigger, session }) {
-//       if (trigger === 'update' && session?.username) {
-//         token.name = session.username
-//       }
-//       if (trigger === 'update' && session?.strapiToken) {
-//         token.strapiToken = session.strapiToken
-//       }
-//       if (account) {
-//         if (account.provider === 'facebook') {
-//           try {
-//             const response = await fetch(
-//               `${getStrapiURL()}/api/auth/${account.provider}/callback?access_token=${account.access_token}`,
-//               { cache: 'no-cache' }
-//             )
-//             if (!response.ok) {
-//               const error = await response.json()
-//               throw new Error(error.error.message)
-//             }
-//             const data = await response.json()
-//             token.strapiToken = data.jwt
-//             token.strapiUserId = data.user.id
-//             token.picture = data.user.picture
-//             token.provider = account.provider
-//             token.blocked = data.user.blocked
-//             token.role = data.user.role
-//           } catch (error) {
-//             console.error('Facebook auth error:', error)
-//             throw error
-//           }
-//         } else if (account.provider === 'credentials' && user) {
-//           token.strapiToken = (user as CustomUser).strapiToken
-//           token.strapiUserId = (user as CustomUser).strapiUserId
-//           token.provider = account.provider
-//           token.blocked = (user as CustomUser).blocked
-//           token.picture = (user as CustomUser).picture
-//           token.role = (user as CustomUser).role
-//         }
-//       }
-//       return token
-//     },
-//     async session({ session, token }: { session: Session; token: JWT }) {
-//       session.strapiToken = token.strapiToken
-//       session.provider = token.provider ?? ''
-//       session.user.strapiUserId = token.strapiUserId
-//       session.user.picture = token.picture
-//       session.user.blocked = token.blocked
-//       session.user.role = token.role
-//       return session
-//     },
-//   },
-//   session: { strategy: "jwt" },
-//   cookies: {
-//     sessionToken: {
-//       name: `__Secure-next-auth.session-token`,
-//       options: {
-//         httpOnly: true,
-//         sameSite: 'lax',
-//         path: '/',
-//         secure: true,
-//         domain: '.abcenglishonline.com' // Ana domain
-//       }
-//     },
-//   },
-// };
